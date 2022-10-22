@@ -89,7 +89,7 @@ func uploadResizeMultipleFile(ctx *gin.Context) {
 		}
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"filepath": filePaths})
+	ctx.JSON(http.StatusOK, gin.H{"filepaths": filePaths})
 }
 func uploadMultipleFile(ctx *gin.Context) {
 	form, _ := ctx.MultipartForm()
@@ -121,6 +121,7 @@ func uploadMultipleFile(ctx *gin.Context) {
 func main() {
 	router := gin.Default()
 
+	router.LoadHTMLGlob("templates/*")
 	router.GET("/healthchecker", func(ctx *gin.Context) {
 		ctx.JSON(200, gin.H{"status": "success", "message": "How to Upload Single and Multiple Files in Golang"})
 	})
@@ -128,5 +129,8 @@ func main() {
 	router.POST("/upload/single", uploadResizeSingleFile)
 	router.POST("/upload/multiple", uploadResizeMultipleFile)
 	router.StaticFS("/images", http.Dir("public"))
+	router.GET("/", func(ctx *gin.Context) {
+		ctx.HTML(http.StatusOK, "index.html", nil)
+	})
 	router.Run(":8000")
 }

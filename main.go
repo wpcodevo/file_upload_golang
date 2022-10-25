@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"image"
 	"io"
@@ -117,6 +118,20 @@ func uploadMultipleFile(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{"filepath": filePaths})
+}
+func init() {
+	if _, err := os.Stat("public/single"); errors.Is(err, os.ErrNotExist) {
+		err := os.MkdirAll("public/single", os.ModePerm)
+		if err != nil {
+			log.Println(err)
+		}
+	}
+	if _, err := os.Stat("public/multiple"); errors.Is(err, os.ErrNotExist) {
+		err := os.MkdirAll("public/multiple", os.ModePerm)
+		if err != nil {
+			log.Println(err)
+		}
+	}
 }
 func main() {
 	router := gin.Default()
